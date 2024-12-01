@@ -82,8 +82,8 @@ async def change_bg(img_no_bk: str = Form(...), file: UploadFile = File(...)):
         return JSONResponse(
             status_code=200,
             content={
-                'img_with_bk': output_image,
-                'img_no_bk': img_no_bk,
+                'img_with_bk': f'/images-output/{new_name}.png',
+                'img_no_bk': f'/images-output/{img_no_bk}',
             },
         )
 
