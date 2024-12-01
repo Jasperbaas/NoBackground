@@ -1,5 +1,7 @@
+# Base image
 FROM python:3.9-slim
 
+# Set the working directory
 WORKDIR /app
 
 # Install system dependencies
@@ -7,6 +9,9 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
     && rm -rf /var/lib/apt/lists/*
+
+# Set environment variables
+ENV MODEL_PATH=/app/ckpt/u2net.pth
 
 # Install Python dependencies
 COPY webapp/requirements.txt .
@@ -26,11 +31,10 @@ RUN pip install gdown && \
 # Copy application code
 COPY webapp /app/webapp
 
-# Set working directory to webapp
 WORKDIR /app/webapp
 
-# Expose the port
+# Expose the port for the application
 EXPOSE 8005
 
-# Start the application
+# Default command to run the application
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8005"]
