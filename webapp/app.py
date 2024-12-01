@@ -51,10 +51,11 @@ async def remove_bg(request: Request, file: UploadFile = File(...)):
         output_image = os.path.join(OUTPUT_FOLDER, f'{new_name}.png')
         img_pil.save(output_image)
 
+        # Return URLs instead of file system paths
         return templates.TemplateResponse("results.html", context={"request": request,
-                                                                   'original_path': file_name,
-                                                                   'filepath': output_image,
-                                                                   'img_no_bk': f'{new_name}.png'})
+                                                               'original_path': f"/images-input/{new_name}.{ext}",
+                                                               'filepath': f"/images-output/{new_name}.png",
+                                                               'img_no_bk': f'{new_name}.png'})
     except Exception as ex:
         logging.info(ex)
         print(ex)
