@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8005:8005"
+    volumes:
+      - images-input:/app/webapp/images-input
+      - images-output:/app/webapp/images-output
+    environment:
+      - MODEL_PATH=/app/ckpt/u2net.pth
+    deploy:
+      resources:
+        limits:
+          cpus: '6'
+          memory: 12G
+        reservations:
+          cpus: '1'
+          memory: 2G
+
+volumes:
+  images-input:
+  images-output:
