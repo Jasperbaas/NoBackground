@@ -11,8 +11,14 @@ from PIL import Image
 
 
 app = FastAPI()
-UPLOAD_FOLDER = "images-input"
-OUTPUT_FOLDER = "images-output"
+# Use absolute paths
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "images-input")
+OUTPUT_FOLDER = os.path.join(os.path.dirname(__file__), "images-output")
+
+# Ensure directories exist
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/images-input", StaticFiles(directory=UPLOAD_FOLDER), name="images-input")
 app.mount("/images-output", StaticFiles(directory=OUTPUT_FOLDER), name="images-output")
@@ -34,7 +40,7 @@ async def remove_bg(request: Request, file: UploadFile = File(...)):
     try:
         new_name = str(uuid.uuid4()).split("-")[0]
         ext = file.filename.split(".")[-1]
-        file_name = f"{UPLOAD_FOLDER}/{new_name}.{ext}"
+        file_name = os.path.join(UPLOAD_FOLDER, f"{new_name}.{ext}")
 
         with open(file_name, "wb+") as f:
             f.write(file.file.read())
@@ -60,7 +66,7 @@ async def change_bg(img_no_bk: str = Form(...), file: UploadFile = File(...)):
     try:
         new_name = str(uuid.uuid4()).split("-")[0]
         ext = file.filename.split(".")[-1]
-        file_name = f"{UPLOAD_FOLDER}/{new_name}_bk.{ext}"
+        file_name = os.path.join(UPLOAD_FOLDER, f"{new_name}_bk.{ext}")
 
         with open(file_name, "wb+") as f:
             f.write(file.file.read())
@@ -93,15 +99,15 @@ async def generate_augmentation(file_input: UploadFile = File(...), files_backgr
         # save input file
         new_name = str(uuid.uuid4()).split("-")[0]
         ext = file_input.filename.split(".")[-1]
-        input_fname = f"{UPLOAD_FOLDER}/{new_name}.{ext}"
+        input_fname = os.path.join(UPLOAD_FOLDER, f"{new_name}.{ext}")
         with open(input_fname, "wb+") as f:
             f.write(file_input.file.read())
 
         # save all background files
         for file in files_background:
             new_name = str(uuid.uuid4()).split("-")[0]
-            ext = file_input.filename.split(".")[-1]
-            bk_fname = f"{UPLOAD_FOLDER}/{new_name}.{ext}"
+            ext = file.filename.split(".")[-1]
+            bk_fname = os.path.join(UPLOAD_FOLDER, f"{new_name}.{ext}")
             with open(bk_fname, "wb+") as f:
                 f.write(file.file.read())
             bk_paths.append(bk_fname)
@@ -169,7 +175,7 @@ async def generate_augmentation(file_input: UploadFile = File(...), files_backgr
 #     try:
 #         new_name = str(uuid.uuid4()).split("-")[0]
 #         ext = file.filename.split(".")[-1]
-#         file_name = f"{UPLOAD_FOLDER}/{new_name}.{ext}"
+#         file_name = os.path.join(UPLOAD_FOLDER, f"{new_name}.{ext}")
 
 #         with open(file_name, "wb+") as f:
 #             f.write(file.file.read())

@@ -21,8 +21,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir -p /app/webapp/images-input \
     /app/webapp/images-output \
     /app/ckpt \
-    && chmod -R 777 /app/webapp/images-input \
-    && chmod -R 777 /app/webapp/images-output
+    && chmod -R 777 /app/webapp
 
 # Download the model
 RUN pip install gdown && \
