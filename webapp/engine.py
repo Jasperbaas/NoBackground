@@ -1,10 +1,11 @@
+import os
 import numpy as np
 from PIL import Image
 import torch
 from torchvision import transforms
 from u2net import utils, model
 
-model_path = './ckpt/u2net.pth'
+model_path = os.getenv('MODEL_PATH', './ckpt/u2net.pth')
 model_pred = model.U2NET(3, 1)
 model_pred.load_state_dict(torch.load(model_path, map_location="cpu"))
 model_pred.eval()
